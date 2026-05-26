@@ -18,7 +18,10 @@ def season_iso_weeks() -> list[tuple[int, int, datetime]]:
     if not matches:
         return []
 
-    played_dates = [m.playedAt for m in matches]
+    played_dates = [m.playedAt for m in matches if m.playedAt is not None]
+    if not played_dates:
+        return []
+
     earliest = min(played_dates)
     latest = max(played_dates)
 

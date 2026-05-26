@@ -4,6 +4,7 @@ import { getSimulationCutoffOptions } from "../../lib/seasonData";
 import { runMonteCarloSimulation } from "../../lib/simulation";
 import { isFixturePlayed } from "../../lib/schedule";
 import type { FixtureWithOdds, ForcedResult } from "../../types";
+import { parseMatchDateTime } from "../../lib/matchDateTime";
 import { FinalPositionChart } from "../organisms/FinalPositionChart";
 import { MatchOddsTable } from "../organisms/MatchOddsTable";
 import { SimulationControls } from "../organisms/SimulationControls";
@@ -44,11 +45,7 @@ export function SimulationPage() {
   const fixturesWithOdds: FixtureWithOdds[] = useMemo(
     () =>
       fixtures.map((fixture) => {
-        const kickoff = new Date(
-          fixture.matchDateTime.endsWith("Z")
-            ? fixture.matchDateTime
-            : `${fixture.matchDateTime}`,
-        );
+        const kickoff = parseMatchDateTime(fixture.matchDateTime);
         return {
           ...fixture,
           isFuture: kickoff > asOf && !isFixturePlayed(fixture),
@@ -79,11 +76,7 @@ export function SimulationPage() {
   };
 
   const playedCount = fixtures.filter((fixture) => {
-    const kickoff = new Date(
-      fixture.matchDateTime.endsWith("Z")
-        ? fixture.matchDateTime
-        : `${fixture.matchDateTime}`,
-    );
+    const kickoff = parseMatchDateTime(fixture.matchDateTime);
     return kickoff <= asOf && isFixturePlayed(fixture);
   }).length;
 

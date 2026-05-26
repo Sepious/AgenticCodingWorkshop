@@ -56,6 +56,19 @@ if len(table) > 10:
     print(f"    ... and {len(table) - 10} more teams")
 print()
 
+# Match history
+r = client.get("/history")
+history = r.get_json()
+print("[6] GET /history")
+print(f"    Status: {r.status_code}")
+print(f"    Count:  {len(history)} weekly snapshots")
+if history:
+    first = history[0]
+    last = history[-1]
+    print(f"    Range:  {first['week']} -> {last['week']}")
+    print(f"    Leader at end: {last['standings'][0]['teamName']} ({last['standings'][0]['points']} pts)")
+print()
+
 # Validation check
 r = client.post(
     "/matches",
@@ -71,7 +84,7 @@ r = client.post(
         ]
     },
 )
-print("[6] Validation (unknown team)")
+print("[7] Validation (unknown team)")
 print(f"    Status: {r.status_code} (expected 400)")
 print(f"    Error:  {r.get_json()['detail']}\n")
 
@@ -82,6 +95,8 @@ assert len(client.get("/matches").get_json()) == 380
 assert len(client.get("/fixtures").get_json()) == 395
 assert client.get("/league-table").status_code == 200
 assert len(table) == 20
+assert len(history) > 0
+assert history[-1]["standings"][0]["teamName"] == "Arsenal FC"
 assert r.status_code == 400
 
 print("=== RESULT ===")

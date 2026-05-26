@@ -1,9 +1,6 @@
 import type { Match, Team, WeekSnapshot } from "../types";
 import { computeLeagueTable } from "./leagueTable";
-
-function parseMatchDateTime(value: string): Date {
-  return new Date(value.endsWith("Z") ? value : `${value}Z`);
-}
+import { parseMatchDateTime } from "./matchDateTime";
 
 function getIsoWeek(date: Date): { year: number; week: number } {
   const utc = new Date(

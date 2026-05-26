@@ -1,4 +1,4 @@
-import type { Fixture, Match, Team } from "../types";
+import type { Fixture, Match, Team, WeekSnapshot } from "../types";
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? "";
 
@@ -25,6 +25,7 @@ export interface SeasonData {
   teams: Team[];
   fixtures: Fixture[];
   matches: Match[];
+  history: WeekSnapshot[];
   dataSource: string;
 }
 
@@ -63,17 +64,19 @@ function toMatch(raw: ApiMatch): Match {
 }
 
 export async function fetchSeasonData(): Promise<SeasonData> {
-  const [health, teams, fixtures, matches] = await Promise.all([
+  const [health, teams, fixtures, matches, history] = await Promise.all([
     fetchJson<{ status: string; dataSource: string }>("/health"),
     fetchJson<Team[]>("/teams"),
     fetchJson<ApiFixture[]>("/fixtures"),
     fetchJson<ApiMatch[]>("/matches"),
+    fetchJson<WeekSnapshot[]>("/history"),
   ]);
 
   return {
     teams,
     fixtures: fixtures.map(toFixture),
     matches: matches.map(toMatch),
+    history,
     dataSource: health.dataSource,
   };
 }

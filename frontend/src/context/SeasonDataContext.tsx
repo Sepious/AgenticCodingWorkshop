@@ -6,12 +6,14 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import type { WeekSnapshot } from "../types";
 import { fetchSeasonData, type SeasonData } from "../lib/api";
 
 interface SeasonDataContextValue {
   teams: SeasonData["teams"];
   fixtures: SeasonData["fixtures"];
   matches: SeasonData["matches"];
+  history: WeekSnapshot[];
   dataSource: string;
   loading: boolean;
   error: string | null;
@@ -55,6 +57,7 @@ export function SeasonDataProvider({ children }: { children: ReactNode }) {
       teams: data?.teams ?? [],
       fixtures: data?.fixtures ?? [],
       matches: data?.matches ?? [],
+      history: data?.history ?? [],
       dataSource: data?.dataSource ?? "unknown",
       loading,
       error,

@@ -1,4 +1,5 @@
 import type { LeagueTableRow, Match, Team } from "../types";
+import { parseMatchDateTime } from "./matchDateTime";
 
 interface TeamStats {
   played: number;
@@ -53,10 +54,6 @@ function applyMatch(stats: Record<string, TeamStats>, match: Match): void {
     stats[awayTeamId].drawn += 1;
     stats[awayTeamId].points += 1;
   }
-}
-
-function parseMatchDateTime(value: string): Date {
-  return new Date(value.endsWith("Z") ? value : `${value}Z`);
 }
 
 export function computeLeagueTable(

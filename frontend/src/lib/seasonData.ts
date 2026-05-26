@@ -1,4 +1,5 @@
 import type { Fixture } from "../types";
+import { parseMatchDateTime } from "./matchDateTime";
 
 export function getSimulationCutoffOptions(
   fixtures: Fixture[],
@@ -8,11 +9,7 @@ export function getSimulationCutoffOptions(
   );
 
   const seasonStart = played[0]?.matchDateTime
-    ? new Date(
-        played[0].matchDateTime.endsWith("Z")
-          ? played[0].matchDateTime
-          : `${played[0].matchDateTime}`,
-      )
+    ? parseMatchDateTime(played[0].matchDateTime)
     : new Date("2025-08-01T00:00:00Z");
 
   const options: Array<{ label: string; asOf: Date; matchIndex: number }> = [
@@ -24,11 +21,7 @@ export function getSimulationCutoffOptions(
   ];
 
   played.forEach((fixture, index) => {
-    const kickoff = new Date(
-      fixture.matchDateTime.endsWith("Z")
-        ? fixture.matchDateTime
-        : `${fixture.matchDateTime}`,
-    );
+    const kickoff = parseMatchDateTime(fixture.matchDateTime);
     options.push({
       label: `After match ${index + 1}: ${fixture.id}`,
       asOf: kickoff,

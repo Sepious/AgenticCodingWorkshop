@@ -15,11 +15,12 @@ import {
   updateRatings,
 } from "./elo";
 import { fixtureToMatch, isFixturePlayed } from "./schedule";
+import { parseMatchDateTime } from "./matchDateTime";
 
 const DEFAULT_TRIALS = 2500;
 
 function parseKickoff(value: string): Date {
-  return new Date(value.endsWith("Z") ? value : `${value}Z`);
+  return parseMatchDateTime(value);
 }
 
 function percentile(sorted: number[], p: number): number {

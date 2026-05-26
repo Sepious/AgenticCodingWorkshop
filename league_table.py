@@ -1,4 +1,6 @@
 # League table computation from match results
+from datetime import datetime
+
 from models import LeagueTableRow
 from storage import get_team, list_matches, list_teams
 
@@ -50,13 +52,16 @@ def _apply_match(stats: dict[str, dict[str, int]], match) -> None:
 
 
 # Build sorted league table rows from all teams and matches
-def compute_league_table() -> list[LeagueTableRow]:
+def compute_league_table(as_of: datetime | None = None) -> list[LeagueTableRow]:
     stats: dict[str, dict[str, int]] = {}
 
     for team in list_teams():
         stats[team.id] = _empty_stats()
 
     for match in list_matches():
+        if as_of is not None:
+            if match.playedAt is None or match.playedAt > as_of:
+                continue
         _apply_match(stats, match)
 
     rows: list[LeagueTableRow] = []

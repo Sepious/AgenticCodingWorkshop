@@ -1,4 +1,5 @@
 import type { Fixture, MatchProbabilities, Team } from "../types";
+import { parseMatchDateTime } from "./matchDateTime";
 import { fixtureToMatch, isFixturePlayed } from "./schedule";
 
 const DEFAULT_ELO = 1500;
@@ -83,11 +84,7 @@ export function buildRatingsFromFixtures(
   );
 
   for (const fixture of sorted) {
-    const kickoff = new Date(
-      fixture.matchDateTime.endsWith("Z")
-        ? fixture.matchDateTime
-        : `${fixture.matchDateTime}Z`,
-    );
+    const kickoff = parseMatchDateTime(fixture.matchDateTime);
     if (kickoff > asOf) {
       continue;
     }
@@ -173,14 +170,7 @@ export function fixturesAsMatches(
   asOf: Date,
 ) {
   return fixtures
-    .filter((fixture) => {
-      const kickoff = new Date(
-        fixture.matchDateTime.endsWith("Z")
-          ? fixture.matchDateTime
-          : `${fixture.matchDateTime}Z`,
-      );
-      return kickoff <= asOf;
-    })
+    .filter((fixture) => parseMatchDateTime(fixture.matchDateTime) <= asOf)
     .map((fixture) => {
       const forced = forcedResults[fixture.id];
       if (forced) {

@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { useSeasonData } from "../../context/SeasonDataContext";
-import { computeHistory } from "../../lib/leagueHistory";
 import { computeLeagueTable } from "../../lib/leagueTable";
 import { computeTeamForm } from "../../lib/teamForm";
 import { computeTeamPerformanceInsights } from "../../lib/teamInsights";
@@ -11,9 +10,8 @@ import { TeamPerformanceInsights } from "../organisms/TeamPerformanceInsights";
 import { MainLayout } from "../templates/MainLayout";
 
 export function LeagueTablePage() {
-  const { teams, matches, dataSource } = useSeasonData();
+  const { teams, matches, history, dataSource } = useSeasonData();
   const rows = computeLeagueTable(teams, matches);
-  const history = computeHistory(teams, matches);
   const leader = rows[0];
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(
     () => leader?.teamId ?? null,

@@ -3,6 +3,7 @@ import logging
 
 from flask import Flask, jsonify, request
 
+from history import compute_history
 from league_table import compute_league_table
 from models import parse_match, parse_team, row_to_dict
 from serializers import fixture_to_dict, match_to_dict
@@ -125,6 +126,12 @@ def get_matches():
 def get_league_table():
     rows = compute_league_table()
     return jsonify([row_to_dict(row) for row in rows])
+
+
+# Weekly league table snapshots for the position history chart
+@app.get("/history")
+def get_history():
+    return jsonify(compute_history())
 
 
 # Run the development server when executed directly
