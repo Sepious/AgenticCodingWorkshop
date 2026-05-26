@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { PageTitle } from "../atoms/PageTitle";
-import { PsychedelicBackdrop } from "../organisms/PsychedelicBackdrop";
+import { AppShell } from "../organisms/AppShell";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -21,11 +21,11 @@ export function MainLayout({
     subtitle ?? `${teamCount} teams · ${matchCount} matches · reality is optional`;
 
   return (
-    <PsychedelicBackdrop>
+    <AppShell>
       <div className="main-layout">
         <PageTitle title={title} subtitle={resolvedSubtitle} />
         <main className="main-layout__content">{children}</main>
       </div>
-    </PsychedelicBackdrop>
+    </AppShell>
   );
 }

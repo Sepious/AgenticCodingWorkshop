@@ -31,22 +31,14 @@ export function LeaderKpiBanner({ leader, form }: LeaderKpiBannerProps) {
       }
       aria-label="League leader"
     >
-      <div className="leader-banner__glow leader-banner__glow--one" aria-hidden="true" />
-      <div className="leader-banner__glow leader-banner__glow--two" aria-hidden="true" />
-      <div className="leader-banner__sparkles" aria-hidden="true">
-        ✦ ✧ ★ ✦ ★ ✧
-      </div>
-
       <div className="leader-banner__main">
         <div className="leader-banner__identity">
           <TeamLogo teamId={leader.teamId} size="lg" />
           <div>
-            <p className="leader-banner__eyebrow">☀ League Leaders ☀</p>
-            <h2 className="leader-banner__team leader-banner__team--wobble">
-              {leader.teamName}
-            </h2>
+            <p className="leader-banner__eyebrow">League leaders</p>
+            <h2 className="leader-banner__team">{leader.teamName}</h2>
             <p className="leader-banner__tagline">
-              Floating above the void after {leader.played} matches
+              Leading after {leader.played} matches
             </p>
           </div>
         </div>

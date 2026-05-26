@@ -13,9 +13,9 @@ export function computeTeamForm(
         match.homeTeamId === teamId || match.awayTeamId === teamId,
     )
     .sort((left, right) =>
-      left.matchDateTime.localeCompare(right.matchDateTime),
+      right.matchDateTime.localeCompare(left.matchDateTime),
     )
-    .slice(-limit);
+    .slice(0, limit);
 
   return teamMatches.map((match) => {
     const isHome = match.homeTeamId === teamId;

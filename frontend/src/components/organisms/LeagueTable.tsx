@@ -6,9 +6,16 @@ import { LeagueTableHeaderRow } from "../molecules/LeagueTableHeaderRow";
 interface LeagueTableProps {
   rows: LeagueTableRow[];
   formByTeamId: Record<string, FormResult[]>;
+  selectedTeamId?: string | null;
+  onSelectTeam?: (teamId: string) => void;
 }
 
-export function LeagueTable({ rows, formByTeamId }: LeagueTableProps) {
+export function LeagueTable({
+  rows,
+  formByTeamId,
+  selectedTeamId = null,
+  onSelectTeam,
+}: LeagueTableProps) {
   return (
     <section className="league-table" aria-label="League standings">
       <div className="league-table__header">
@@ -30,6 +37,8 @@ export function LeagueTable({ rows, formByTeamId }: LeagueTableProps) {
                 key={row.teamId}
                 row={row}
                 form={formByTeamId[row.teamId] ?? []}
+                selected={row.teamId === selectedTeamId}
+                onSelect={onSelectTeam}
               />
             ))}
           </tbody>
