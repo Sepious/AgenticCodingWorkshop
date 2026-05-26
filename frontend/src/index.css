@@ -808,6 +808,218 @@ body {
   box-shadow: 0 0 10px color-mix(in srgb, var(--team-color) 65%, transparent);
 }
 
+.app-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+  background: rgba(8, 2, 24, 0.82);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 190, 11, 0.25);
+}
+
+.app-nav__link {
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff7ff;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.app-nav__link--active {
+  border-color: #fee440;
+  box-shadow: 0 0 18px rgba(254, 228, 64, 0.35);
+  background: rgba(131, 56, 236, 0.45);
+}
+
+.sim-controls {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .sim-controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.sim-controls__panel {
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.sim-controls__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: #fee440;
+}
+
+.sim-controls__hint {
+  margin: 0 0 0.75rem;
+  font-size: 0.82rem;
+  color: rgba(255, 247, 255, 0.72);
+}
+
+.sim-controls__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.sim-controls__field select {
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(15, 5, 35, 0.9);
+  color: #fff7ff;
+  font: inherit;
+}
+
+.sim-controls__elo-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.sim-controls__elo-row {
+  display: grid;
+  grid-template-columns: 7rem 1fr 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.sim-controls__elo-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sim-controls__elo-value {
+  text-align: right;
+  font-weight: 700;
+  color: #06ffa5;
+}
+
+.sim-page__charts {
+  display: grid;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.sim-chart {
+  padding: 1rem 1.1rem 1.25rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.sim-chart__header {
+  margin-bottom: 0.75rem;
+}
+
+.sim-chart__title {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #f0abfc;
+}
+
+.sim-chart__subtitle,
+.sim-chart__empty {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: rgba(255, 247, 255, 0.75);
+}
+
+.sim-chart__canvas {
+  width: 100%;
+}
+
+.sim-chart__percentile-table {
+  margin-top: 1rem;
+  overflow-x: auto;
+}
+
+.sim-chart__table-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  color: #e0aaff;
+}
+
+.sim-chart__percentile-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.sim-chart__percentile-table th,
+.sim-chart__percentile-table td {
+  padding: 0.4rem 0.55rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sim-chart__row--focus {
+  background: rgba(131, 56, 236, 0.25);
+}
+
+.match-odds {
+  padding: 1rem 1.1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.32);
+}
+
+.match-odds__title {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #00f5d4;
+}
+
+.match-odds__subtitle,
+.match-odds__empty {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: rgba(255, 247, 255, 0.75);
+}
+
+.match-odds__scroll {
+  margin-top: 0.75rem;
+  overflow-x: auto;
+}
+
+.match-odds__table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.match-odds__table th,
+.match-odds__table td {
+  padding: 0.45rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.match-odds__table th {
+  color: #fee440;
+  font-weight: 600;
+}
+
 @media (min-width: 720px) {
   .leader-banner__main {
     grid-template-columns: 1.2fr 1fr;
