@@ -55,9 +55,14 @@ function applyMatch(stats: Record<string, TeamStats>, match: Match): void {
   }
 }
 
+function parseMatchDateTime(value: string): Date {
+  return new Date(value.endsWith("Z") ? value : `${value}Z`);
+}
+
 export function computeLeagueTable(
   teams: Team[],
   matches: Match[],
+  asOf?: Date,
 ): LeagueTableRow[] {
   const teamById = new Map(teams.map((team) => [team.id, team]));
   const stats: Record<string, TeamStats> = {};
@@ -67,6 +72,9 @@ export function computeLeagueTable(
   }
 
   for (const match of matches) {
+    if (asOf && parseMatchDateTime(match.matchDateTime) > asOf) {
+      continue;
+    }
     applyMatch(stats, match);
   }
 

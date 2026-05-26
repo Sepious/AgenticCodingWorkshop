@@ -25,3 +25,17 @@ export interface LeagueTableRow {
   points: number;
   position: number;
 }
+
+export interface StandingSnapshot {
+  teamId: string;
+  teamName: string;
+  position: number;
+  points: number;
+  playedMatches: number;
+}
+
+export interface WeekSnapshot {
+  week: string;
+  weekEnd: string;
+  standings: StandingSnapshot[];
+}

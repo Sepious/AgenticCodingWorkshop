@@ -677,6 +677,137 @@ body {
   text-shadow: 0 0 10px rgba(6, 255, 165, 0.45);
 }
 
+.history-chart {
+  position: relative;
+  background: rgba(18, 0, 31, 0.82);
+  border: 2px solid transparent;
+  border-radius: 24px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 40px rgba(255, 0, 110, 0.22),
+    inset 0 0 40px rgba(131, 56, 236, 0.12);
+  animation: border-melt 12s ease-in-out infinite;
+}
+
+.history-chart__header {
+  padding: 1.25rem 1.35rem 0.35rem;
+}
+
+.history-chart__title {
+  margin: 0;
+  font-family: "Rubik Glitch", "Space Grotesk", sans-serif;
+  font-size: 1.35rem;
+  color: #fee440;
+}
+
+.history-chart__title--trip {
+  animation: text-glitch 3s ease-in-out infinite;
+}
+
+.history-chart__subtitle {
+  margin: 0.35rem 0 0;
+  color: #e0aaff;
+  font-size: 0.92rem;
+}
+
+.history-chart__canvas {
+  padding: 0.5rem 0.75rem 1.25rem;
+}
+
+.history-chart__tooltip {
+  min-width: 12rem;
+  padding: 0.85rem 1rem;
+  border-radius: 16px;
+  background: rgba(18, 0, 31, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 0 24px rgba(131, 56, 236, 0.35),
+    0 0 40px rgba(255, 0, 110, 0.18);
+}
+
+.history-chart__tooltip-title {
+  margin: 0 0 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fee440;
+}
+
+.history-chart__tooltip-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.history-chart__tooltip-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #fff7ff;
+}
+
+.history-chart__tooltip-dot {
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 999px;
+}
+
+.history-chart__tooltip-position {
+  font-weight: 700;
+  color: #06ffa5;
+}
+
+.history-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.history-chart__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.28);
+  color: #fff7ff;
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.history-chart__legend-item:hover,
+.history-chart__legend-item--focused {
+  transform: translateY(-1px);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--team-color) 55%, transparent);
+}
+
+.history-chart__legend-item--hidden {
+  opacity: 0.35;
+  text-decoration: line-through;
+}
+
+.history-chart__legend-swatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: var(--team-color);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--team-color) 65%, transparent);
+}
+
 @media (min-width: 720px) {
   .leader-banner__main {
     grid-template-columns: 1.2fr 1fr;
