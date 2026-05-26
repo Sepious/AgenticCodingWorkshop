@@ -1,9 +1,6 @@
 import { useMemo, useState } from "react";
-import {
-  getSeasonFixtures,
-  getSeasonTeams,
-  getSimulationCutoffOptions,
-} from "../../lib/seasonData";
+import { useSeasonData } from "../../context/SeasonDataContext";
+import { getSimulationCutoffOptions } from "../../lib/seasonData";
 import { runMonteCarloSimulation } from "../../lib/simulation";
 import { isFixturePlayed } from "../../lib/schedule";
 import type { FixtureWithOdds, ForcedResult } from "../../types";
@@ -14,8 +11,7 @@ import { SimulationTrajectoryChart } from "../organisms/SimulationTrajectoryChar
 import { MainLayout } from "../templates/MainLayout";
 
 export function SimulationPage() {
-  const teams = getSeasonTeams();
-  const fixtures = getSeasonFixtures();
+  const { teams, fixtures, dataSource } = useSeasonData();
   const cutoffOptions = useMemo(
     () => getSimulationCutoffOptions(fixtures),
     [fixtures],
@@ -51,7 +47,7 @@ export function SimulationPage() {
         const kickoff = new Date(
           fixture.matchDateTime.endsWith("Z")
             ? fixture.matchDateTime
-            : `${fixture.matchDateTime}Z`,
+            : `${fixture.matchDateTime}`,
         );
         return {
           ...fixture,
@@ -86,7 +82,7 @@ export function SimulationPage() {
     const kickoff = new Date(
       fixture.matchDateTime.endsWith("Z")
         ? fixture.matchDateTime
-        : `${fixture.matchDateTime}Z`,
+        : `${fixture.matchDateTime}`,
     );
     return kickoff <= asOf && isFixturePlayed(fixture);
   }).length;
@@ -95,8 +91,8 @@ export function SimulationPage() {
     <MainLayout
       teamCount={teams.length}
       matchCount={fixtures.length}
-      title="Season Simulation"
-      subtitle={`Monte Carlo · ${simulationResult.trials.toLocaleString()} trials · ${playedCount} matches played at cutoff`}
+      title="Premier League 25/26 Simulation"
+      subtitle={`Monte Carlo · ${simulationResult.trials.toLocaleString()} trials · ${playedCount} played at cutoff · source: ${dataSource}`}
     >
       <SimulationControls
         teams={teams}

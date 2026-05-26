@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { SeasonDataProvider } from "./context/SeasonDataContext";
 import { LeagueTablePage } from "./components/pages/LeagueTablePage";
 import { SimulationPage } from "./components/pages/SimulationPage";
+import { SeasonGate } from "./components/templates/SeasonGate";
 
 type AppView = "table" | "simulation";
 
@@ -8,7 +10,7 @@ function App() {
   const [view, setView] = useState<AppView>("simulation");
 
   return (
-    <>
+    <SeasonDataProvider>
       <nav className="app-nav" aria-label="Main navigation">
         <button
           type="button"
@@ -25,8 +27,10 @@ function App() {
           Season simulation
         </button>
       </nav>
-      {view === "table" ? <LeagueTablePage /> : <SimulationPage />}
-    </>
+      <SeasonGate>
+        {view === "table" ? <LeagueTablePage /> : <SimulationPage />}
+      </SeasonGate>
+    </SeasonDataProvider>
   );
 }
 

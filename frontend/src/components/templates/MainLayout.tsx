@@ -14,7 +14,7 @@ export function MainLayout({
   children,
   teamCount,
   matchCount,
-  title = "Premier Wildlife League",
+  title = "Premier League 25/26",
   subtitle,
 }: MainLayoutProps) {
   const resolvedSubtitle =

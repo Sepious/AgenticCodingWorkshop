@@ -1,10 +1,11 @@
 # Data classes and validation helpers for teams, matches, and league rows
 import re
 from dataclasses import asdict, dataclass
+from datetime import datetime
 
 
 # Regex pattern for Sportradar-style team identifiers
-TEAM_ID_PATTERN = re.compile(r"^sr:team:\d+$")
+TEAM_ID_PATTERN = re.compile(r"^sr:(?:team|competitor):\d+$")
 
 
 # Team entity stored in memory
@@ -12,6 +13,18 @@ TEAM_ID_PATTERN = re.compile(r"^sr:team:\d+$")
 class Team:
     id: str
     name: str
+
+
+# Season fixture; scores are set once the match is completed
+@dataclass
+class Fixture:
+    id: str
+    homeTeamId: str
+    awayTeamId: str
+    matchDateTime: datetime
+    homeGoals: int | None = None
+    awayGoals: int | None = None
+    round: int | None = None
 
 
 # Completed match with final score
@@ -22,6 +35,7 @@ class Match:
     awayTeamId: str
     homeGoals: int
     awayGoals: int
+    playedAt: datetime | None = None
 
 
 # One row in the computed league standings
@@ -49,7 +63,7 @@ def parse_team(data: dict) -> tuple[Team | None, str | None]:
     name = data.get("name")
 
     if not isinstance(team_id, str) or not TEAM_ID_PATTERN.match(team_id):
-        return None, "Team id must match sr:team:<number>"
+        return None, "Team id must match sr:team:<number> or sr:competitor:<number>"
     if not isinstance(name, str) or not name.strip():
         return None, "Team name must be a non-empty string"
 
@@ -70,9 +84,9 @@ def parse_match(data: dict) -> tuple[Match | None, str | None]:
     if not isinstance(match_id, str) or not match_id:
         return None, "Match id must be a non-empty string"
     if not isinstance(home_team_id, str) or not TEAM_ID_PATTERN.match(home_team_id):
-        return None, "homeTeamId must match sr:team:<number>"
+        return None, "homeTeamId must match sr:team:<number> or sr:competitor:<number>"
     if not isinstance(away_team_id, str) or not TEAM_ID_PATTERN.match(away_team_id):
-        return None, "awayTeamId must match sr:team:<number>"
+        return None, "awayTeamId must match sr:team:<number> or sr:competitor:<number>"
     if not isinstance(home_goals, int) or home_goals < 0:
         return None, "homeGoals must be a non-negative integer"
     if not isinstance(away_goals, int) or away_goals < 0:

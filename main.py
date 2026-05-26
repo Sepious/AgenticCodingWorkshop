@@ -1,18 +1,47 @@
 # Flask application entry point for the league table backend
+import logging
+
 from flask import Flask, jsonify, request
 
 from league_table import compute_league_table
 from models import parse_match, parse_team, row_to_dict
-from storage import add_matches, add_teams, get_team, list_matches, list_teams
+from serializers import fixture_to_dict, match_to_dict
+from sportradar_loader import load_premier_league_data
+from storage import (
+    add_matches,
+    add_teams,
+    get_team,
+    list_fixtures,
+    list_matches,
+    list_teams,
+    replace_fixtures,
+    replace_matches,
+    replace_teams,
+)
+
+logging.basicConfig(level=logging.INFO)
 
 # Create the Flask application instance
 app = Flask(__name__)
+
+_teams, _fixtures, _matches, _data_source = load_premier_league_data()
+replace_teams(_teams)
+replace_fixtures(_fixtures)
+replace_matches(_matches)
+logging.getLogger(__name__).info("Database seeded from %s", _data_source)
+
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    return response
 
 
 # Health check endpoint
 @app.get("/health")
 def health():
-    return jsonify({"status": "ok"})
+    return jsonify({"status": "ok", "dataSource": _data_source})
 
 
 # Add multiple teams in a single request
@@ -76,35 +105,19 @@ def create_matches():
         matches.append(match)
 
     added = add_matches(matches)
-    return jsonify(
-        [
-            {
-                "id": m.id,
-                "homeTeamId": m.homeTeamId,
-                "awayTeamId": m.awayTeamId,
-                "homeGoals": m.homeGoals,
-                "awayGoals": m.awayGoals,
-            }
-            for m in added
-        ]
-    ), 201
+    return jsonify([match_to_dict(m) for m in added]), 201
+
+
+# List every fixture in the current season schedule
+@app.get("/fixtures")
+def get_fixtures():
+    return jsonify([fixture_to_dict(fixture) for fixture in list_fixtures()])
 
 
 # List every match currently in memory
 @app.get("/matches")
 def get_matches():
-    return jsonify(
-        [
-            {
-                "id": m.id,
-                "homeTeamId": m.homeTeamId,
-                "awayTeamId": m.awayTeamId,
-                "homeGoals": m.homeGoals,
-                "awayGoals": m.awayGoals,
-            }
-            for m in list_matches()
-        ]
-    )
+    return jsonify([match_to_dict(m) for m in list_matches()])
 
 
 # Compute and return the league table from all stored matches

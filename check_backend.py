@@ -1,9 +1,10 @@
 # Smoke test script to verify all league table API endpoints
-from main import app
+from main import app, _data_source
 
 client = app.test_client()
 
 print("=== LEAGUE TABLE BACKEND CHECK ===\n")
+print(f"Data source: {_data_source}\n")
 
 # Health check
 r = client.get("/health")
@@ -11,66 +12,48 @@ print("[1] GET /health")
 print(f"    Status: {r.status_code}")
 print(f"    Body:   {r.get_json()}\n")
 
-# Add teams
-teams_payload = {
-    "teams": [
-        {"id": "sr:team:1", "name": "Arsenal"},
-        {"id": "sr:team:2", "name": "Chelsea"},
-        {"id": "sr:team:3", "name": "Liverpool"},
-        {"id": "sr:team:4", "name": "Manchester City"},
-    ]
-}
-r = client.post("/teams", json=teams_payload)
-print("[2] POST /teams")
-print(f"    Status: {r.status_code}")
-print(f"    Added:  {len(r.get_json())} teams\n")
-
-# List teams
+# List teams loaded on startup
 r = client.get("/teams")
 teams = r.get_json()
-print("[3] GET /teams")
+print("[2] GET /teams")
 print(f"    Status: {r.status_code}")
 print(f"    Count:  {len(teams)} teams")
-for team in teams:
+for team in teams[:5]:
     print(f"      - {team['name']} ({team['id']})")
+if len(teams) > 5:
+    print(f"      ... and {len(teams) - 5} more")
 print()
 
-# Add matches
-matches_payload = {
-    "matches": [
-        {"id": "m1", "homeTeamId": "sr:team:1", "awayTeamId": "sr:team:2", "homeGoals": 2, "awayGoals": 1},
-        {"id": "m2", "homeTeamId": "sr:team:2", "awayTeamId": "sr:team:3", "homeGoals": 1, "awayGoals": 1},
-        {"id": "m3", "homeTeamId": "sr:team:3", "awayTeamId": "sr:team:1", "homeGoals": 0, "awayGoals": 3},
-        {"id": "m4", "homeTeamId": "sr:team:4", "awayTeamId": "sr:team:2", "homeGoals": 4, "awayGoals": 0},
-        {"id": "m5", "homeTeamId": "sr:team:1", "awayTeamId": "sr:team:4", "homeGoals": 1, "awayGoals": 1},
-    ]
-}
-r = client.post("/matches", json=matches_payload)
-print("[4] POST /matches")
-print(f"    Status: {r.status_code}")
-print(f"    Added:  {len(r.get_json())} matches\n")
-
-# List matches
+# List matches loaded on startup
 r = client.get("/matches")
 matches = r.get_json()
-print("[5] GET /matches")
+print("[3] GET /matches")
 print(f"    Status: {r.status_code}")
 print(f"    Count:  {len(matches)} matches\n")
+
+# List fixtures loaded on startup
+r = client.get("/fixtures")
+fixtures = r.get_json()
+print("[4] GET /fixtures")
+print(f"    Status: {r.status_code}")
+print(f"    Count:  {len(fixtures)} fixtures\n")
 
 # League table
 r = client.get("/league-table")
 table = r.get_json()
-print("[6] GET /league-table")
+print("[5] GET /league-table")
 print(f"    Status: {r.status_code}\n")
 print("    Pos  Team               P  W  D  L  GF  GA  GD  Pts")
 print("    ---  -----------------  -  -  -  -  --  --  --  ---")
-for row in table:
+for row in table[:10]:
     print(
         f"    {row['position']:>3}  {row['teamName']:<17}  "
         f"{row['played']}  {row['won']}  {row['drawn']}  {row['lost']}  "
         f"{row['goalsFor']:>2}  {row['goalsAgainst']:>2}  "
         f"{row['goalDifference']:>+2}  {row['points']:>3}"
     )
+if len(table) > 10:
+    print(f"    ... and {len(table) - 10} more teams")
 print()
 
 # Validation check
@@ -80,27 +63,27 @@ r = client.post(
         "matches": [
             {
                 "id": "bad",
-                "homeTeamId": "sr:team:99",
-                "awayTeamId": "sr:team:1",
+                "homeTeamId": "sr:competitor:999999",
+                "awayTeamId": teams[0]["id"],
                 "homeGoals": 1,
                 "awayGoals": 0,
             }
         ]
     },
 )
-print("[7] Validation (unknown team)")
+print("[6] Validation (unknown team)")
 print(f"    Status: {r.status_code} (expected 400)")
 print(f"    Error:  {r.get_json()['detail']}\n")
 
 # Assertions
 assert client.get("/health").status_code == 200
-assert len(client.get("/teams").get_json()) == 4
-assert len(client.get("/matches").get_json()) == 5
+assert len(client.get("/teams").get_json()) == 20
+assert len(client.get("/matches").get_json()) == 380
+assert len(client.get("/fixtures").get_json()) == 395
 assert client.get("/league-table").status_code == 200
-assert table[0]["teamName"] == "Arsenal"
-assert table[0]["points"] == 7
+assert len(table) == 20
 assert r.status_code == 400
 
 print("=== RESULT ===")
-print("All 7 checks passed.")
+print("All checks passed.")
 print("Backend is working correctly.")

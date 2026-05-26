@@ -1,25 +1,4 @@
-import { matches, teams } from "../data/testData";
-import type { Fixture, Team } from "../types";
-import {
-  buildDoubleRoundRobinSchedule,
-  mergePlayedIntoSchedule,
-} from "./schedule";
-
-const SEASON_START = "2026-01-10T12:00:00";
-
-let cachedFixtures: Fixture[] | null = null;
-
-export function getSeasonTeams(): Team[] {
-  return teams;
-}
-
-export function getSeasonFixtures(): Fixture[] {
-  if (!cachedFixtures) {
-    const schedule = buildDoubleRoundRobinSchedule(teams, SEASON_START);
-    cachedFixtures = mergePlayedIntoSchedule(schedule, matches);
-  }
-  return cachedFixtures;
-}
+import type { Fixture } from "../types";
 
 export function getSimulationCutoffOptions(
   fixtures: Fixture[],
@@ -28,10 +7,18 @@ export function getSimulationCutoffOptions(
     (fixture) => fixture.homeGoals !== undefined && fixture.awayGoals !== undefined,
   );
 
+  const seasonStart = played[0]?.matchDateTime
+    ? new Date(
+        played[0].matchDateTime.endsWith("Z")
+          ? played[0].matchDateTime
+          : `${played[0].matchDateTime}`,
+      )
+    : new Date("2025-08-01T00:00:00Z");
+
   const options: Array<{ label: string; asOf: Date; matchIndex: number }> = [
     {
       label: "Season start (no matches played)",
-      asOf: new Date("2026-01-01T00:00:00Z"),
+      asOf: new Date(seasonStart.getTime() - 86_400_000),
       matchIndex: 0,
     },
   ];
@@ -40,7 +27,7 @@ export function getSimulationCutoffOptions(
     const kickoff = new Date(
       fixture.matchDateTime.endsWith("Z")
         ? fixture.matchDateTime
-        : `${fixture.matchDateTime}Z`,
+        : `${fixture.matchDateTime}`,
     );
     options.push({
       label: `After match ${index + 1}: ${fixture.id}`,

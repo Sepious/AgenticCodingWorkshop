@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { matches, teams } from "../../data/testData";
+import { useSeasonData } from "../../context/SeasonDataContext";
 import { computeHistory } from "../../lib/leagueHistory";
 import { computeLeagueTable } from "../../lib/leagueTable";
 import { computeTeamForm } from "../../lib/teamForm";
@@ -11,6 +11,7 @@ import { TeamPerformanceInsights } from "../organisms/TeamPerformanceInsights";
 import { MainLayout } from "../templates/MainLayout";
 
 export function LeagueTablePage() {
+  const { teams, matches, dataSource } = useSeasonData();
   const rows = computeLeagueTable(teams, matches);
   const history = computeHistory(teams, matches);
   const leader = rows[0];
@@ -25,10 +26,15 @@ export function LeagueTablePage() {
     return selectedRow
       ? computeTeamPerformanceInsights(selectedRow, matches, teams)
       : null;
-  }, [rows, selectedTeamId]);
+  }, [rows, selectedTeamId, matches, teams]);
 
   return (
-    <MainLayout matchCount={matches.length} teamCount={teams.length}>
+    <MainLayout
+      matchCount={matches.length}
+      teamCount={teams.length}
+      title="Premier League 25/26"
+      subtitle={`${teams.length} teams · ${matches.length} results · source: ${dataSource}`}
+    >
       {leader ? (
         <LeaderKpiBanner
           leader={leader}

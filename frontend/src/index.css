@@ -942,3 +942,32 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+.season-gate {
+  display: grid;
+  place-items: center;
+  min-height: 50vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+.season-gate__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.season-gate__subtitle {
+  margin: 0;
+  color: rgba(255, 247, 255, 0.75);
+}
+
+.season-gate__hint {
+  margin: 1rem 0 0;
+  color: rgba(255, 247, 255, 0.6);
+  font-size: 0.95rem;
+}
+
+.season-gate--error .season-gate__title {
+  color: #ff6b9d;
+}
